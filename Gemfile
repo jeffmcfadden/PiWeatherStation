@@ -32,6 +32,20 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'bootstrap-sass', '~> 3.1.1'
+gem 'haml', '~> 4.0.5'
+
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 4.0.3'
+
+gem 'simple_form'
+
+gem "flot-rails"
+# Use unicorn as the app server
+gem 'unicorn'
+gem 'figaro'
+gem 'chartkick'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
