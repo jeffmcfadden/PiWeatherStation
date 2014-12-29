@@ -1,0 +1,2 @@
+module OldStyleHelper
+end
