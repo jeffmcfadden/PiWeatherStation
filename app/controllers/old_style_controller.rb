@@ -7,6 +7,8 @@ class OldStyleController < ApplicationController
   def current_conditions
     output = `sudo rht03_and_exit`
 
+    # output = `echo "hi"`
+
     values = output.split( "," )
 
     temp_c = values[0].split( ":" )[1].strip.to_f
@@ -18,7 +20,10 @@ class OldStyleController < ApplicationController
 
     # [{"name":"Temperature","value":55.4},{"name":"Humidity","value":23.8},{"name":"Dewpoint","value":18.859867363465092}]
 
-    render json: { temp_c: temp_c, temperature: c_to_f( temp_c.to_f ), humidity: rh, dewpoint: c_to_f(dew_point) }
+    temp_f = c_to_f( temp_c.to_f )
+    dew_point_f = c_to_f( dew_point )
+
+    render json: [{ name: "Temperature", value: temp_f }, { name: "Humidity", value: rh }, { name: "Dewpoint", value: dew_point_f } ]
   end
 
 end
