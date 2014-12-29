@@ -35,9 +35,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bootstrap-sass', '~> 3.1.1'
 gem 'haml', '~> 4.0.5'
 
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.3'
-
 gem 'simple_form'
 
 gem "flot-rails"
