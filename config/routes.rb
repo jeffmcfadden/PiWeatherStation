@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
 
   get '/current_conditions' => "old_style#current_conditions", as: :old_style_current_conditions
+  get '/take_sensor_observations' => 'sensors#take_sensor_observations', as: :take_sensor_observations
+
+  resources :sensors
+
+  root 'sensors#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

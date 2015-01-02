@@ -35,7 +35,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bootstrap-sass', '~> 3.1.1'
 gem 'haml', '~> 4.0.5'
 
-gem 'simple_form'
+# gem 'simple_form'
 
 gem "flot-rails"
 # Use unicorn as the app server
