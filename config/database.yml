@@ -20,7 +20,8 @@ default: &default
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
-  username: root
+  username: rails
+  password: ""
 
 development:
   <<: *default
@@ -82,5 +83,5 @@ test:
 production:
   <<: *default
   database: PiWeatherStation_production
-  username: PiWeatherStation
-  password: <%= ENV['PIWEATHERSTATION_DATABASE_PASSWORD'] %>
+  username: rails2
+  password: rails2
