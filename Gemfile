@@ -32,8 +32,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'bootstrap-sass', '~> 3.1.1'
+gem 'bootstrap-sass', '~> 3.2'
 gem 'haml', '~> 4.0.5'
+gem 'autoprefixer-rails'
 
 # gem 'simple_form'
 

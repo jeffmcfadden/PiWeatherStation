@@ -1,0 +1,1 @@
+* * * * * /usr/bin/curl -s "http://127.0.0.1/take_sensor_observations" > /dev/null
