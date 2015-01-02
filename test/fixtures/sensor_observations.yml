@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sensor_id: 
+  value: 1.5
+  observed_at: 2015-01-02 14:48:53
+
+two:
+  sensor_id: 
+  value: 1.5
+  observed_at: 2015-01-02 14:48:53

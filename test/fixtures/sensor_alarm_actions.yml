@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sensor_alarm_id: 
+  action_type: 1
+  params: MyText
+
+two:
+  sensor_alarm_id: 
+  action_type: 1
+  params: MyText
