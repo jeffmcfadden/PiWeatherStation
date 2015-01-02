@@ -24,7 +24,7 @@ class Sensor < ActiveRecord::Base
   end
 
   def take_observation_ds1820!
-    physical_sensor_device_id = self.sensor_settings[:physical_sensor_device_id] #Example: 28-00000202301d
+    physical_sensor_device_id = self.sensor_settings["physical_sensor_device_id"] #Example: 28-00000202301d
 
     if Rails.env.production?
       output=`cat /sys/bus/w1/devices/#{physical_sensor_device_id}/w1_slave`
