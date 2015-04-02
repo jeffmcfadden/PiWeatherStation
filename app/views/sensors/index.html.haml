@@ -3,7 +3,7 @@
     = "#{s.name}"
     %small
       = "#{c_to_f( s.latest_value )}"
-      = "#{s.latest_value_observed_at.localtime.strftime("%B %-d, %Y at %-l:%M%P")}"
+      = "#{s.latest_value_observed_at.strftime("%B %-d, %Y at %-l:%M%P")}"
 
   = line_chart [{ name: "", data: @values_for_chart[s.id]}], library: { curveType: 'none', lineWidth: '0.5', pointSize: 0 }, colors: ['FFC873'], min: nil, max: nil, height: '400px'
 
