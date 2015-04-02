@@ -43,7 +43,7 @@ class Sensor < ActiveRecord::Base
   def max_and_min_data( since = 30 )
     data = []
 
-    (since..0).each do |d|
+    (0..since).each do |d|
       day = d.days.ago
       bod = day.beginning_of_day
       eod = day.end_of_day
@@ -54,6 +54,6 @@ class Sensor < ActiveRecord::Base
       data.push( { day: day, max: max, min: min } )
     end
 
-    data
+    data.reverse
   end
 end
