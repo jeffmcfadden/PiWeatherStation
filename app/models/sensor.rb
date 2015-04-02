@@ -39,4 +39,21 @@ class Sensor < ActiveRecord::Base
 
     temp_c
   end
+
+  def max_and_min_data( since = 30 )
+    data = []
+
+    since..0.each do |d|
+      day = d.days.ago
+      bod = day.beginning_of_day
+      eod = day.end_of_day
+
+      max = sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).maximum( :value )
+      min = sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).minimum( :value )
+
+      data.push( { day: day, max: max, min: min } )
+    end
+
+    data
+  end
 end

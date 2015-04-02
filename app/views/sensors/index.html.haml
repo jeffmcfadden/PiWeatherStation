@@ -6,3 +6,25 @@
       = "#{s.latest_value_observed_at.localtime.strftime("%B %-d, %Y at %-l:%M%P")}"
 
   = line_chart [{ name: "", data: @values_for_chart[s.id]}], library: { curveType: 'none', lineWidth: '0.5', pointSize: 0 }, colors: ['FFC873'], min: nil, max: nil, height: '400px'
+
+  %table.table.small.table-condensed
+    %tr
+      %th
+        Day
+      - s.max_and_min_data( 21 ).each do |data|
+        %td
+          = data[:day].strftime("%b %-d")
+    %tr
+      %th
+        Max
+      - s.max_and_min_data( 21 ).each do |data|
+        %td
+          = ( data[:max] * 1.8000 + 32.00 ).round(1)
+    %tr
+      %th
+        Min
+      - s.max_and_min_data( 21 ).each do |data|
+        %td
+          = ( data[:min] * 1.8000 + 32.00 ).round(1)
+
+
