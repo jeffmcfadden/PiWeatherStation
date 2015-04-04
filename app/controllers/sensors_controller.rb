@@ -1,5 +1,6 @@
 class SensorsController < ApplicationController
 
+
   def c_to_f( c )
     (c * 1.8000 + 32.00 ).round(2)
   end
@@ -22,6 +23,22 @@ class SensorsController < ApplicationController
     end
 
     render json: { "ok" => "ok" }
+  end
+
+  def show
+    @sensor = Sensor.find( params[:id] )
+
+    sensor_for_json = {
+      sensor: @sensor,
+      latest: @sensor.sensor_observations.order( observed_at: :desc ).limit(1).first
+    }
+
+    respond_to do |format|
+      format.html
+      format.json {
+        render :json => sensor_for_json
+      }
+    end
   end
 
 end
