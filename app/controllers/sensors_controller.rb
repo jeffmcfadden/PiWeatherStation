@@ -12,7 +12,7 @@ class SensorsController < ApplicationController
     @sensors.each do |s|
       values = s.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', 24.hours.ago ] ).collect{ |so| [so.observed_at, c_to_f( so.value )] }
 
-      @values_for_chart[s.id] = values
+      @values_for_chart[s.id] = moving_average_of_values( values )
     end
 
   end
@@ -39,6 +39,26 @@ class SensorsController < ApplicationController
         render :json => sensor_for_json
       }
     end
+  end
+
+  private
+
+  def moving_average_of_values( v )
+    moving_averaged = []
+
+    stack = []
+
+    v.each do |d|
+      stack.push d[1]
+
+      stack.shift if stack.size > 3
+
+      this_temp = stack.sum / stack.size.to_f
+
+      moving_averaged += [d[0], this_temp]
+    end
+
+    moving_averaged
   end
 
 end
