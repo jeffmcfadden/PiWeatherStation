@@ -55,7 +55,7 @@ class SensorsController < ApplicationController
 
       this_temp = stack.sum / stack.size.to_f
 
-      moving_averaged += [d[0], this_temp]
+      moving_averaged.push( [d[0], this_temp] )
     end
 
     moving_averaged
