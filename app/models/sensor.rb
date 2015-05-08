@@ -2,7 +2,7 @@ class Sensor < ActiveRecord::Base
   has_many :sensor_observations
   has_many :sensor_alarms
 
-  enum sensor_type: [ :ds1820 ]
+  enum sensor_type: [ :ds1820, :kw ]
 
   serialize :sensor_settings, JSON
 
@@ -49,7 +49,10 @@ class Sensor < ActiveRecord::Base
       eod = day.end_of_day
 
       max = sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).maximum( :value )
+      max = 0 if max.nil?
+
       min = sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).minimum( :value )
+      min = 0 if min.nil?
 
       data.push( { day: day, max: max, min: min } )
     end

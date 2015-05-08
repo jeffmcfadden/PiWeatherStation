@@ -3,7 +3,11 @@ Rails.application.routes.draw do
   get '/current_conditions' => "old_style#current_conditions", as: :old_style_current_conditions
   get '/take_sensor_observations' => 'sensors#take_sensor_observations', as: :take_sensor_observations
 
-  resources :sensors
+  resources :sensors do
+    member do
+      post 'record_observation'
+    end
+  end
 
   root 'sensors#index'
 

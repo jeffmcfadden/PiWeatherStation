@@ -1,5 +1,6 @@
 class SensorsController < ApplicationController
 
+  protect_from_forgery with: :null_session, only: [:record_observation]
 
   def c_to_f( c )
     (c * 1.8000 + 32.00 ).round(2)
@@ -10,11 +11,27 @@ class SensorsController < ApplicationController
     @sensors = Sensor.all
 
     @sensors.each do |s|
-      values = s.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', 24.hours.ago ] ).collect{ |so| [so.observed_at, c_to_f( so.value )] }
+      values = s.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', 24.hours.ago ] ).collect{ |so|
+
+        if s.ds1820?
+          [so.observed_at, c_to_f( so.value )]
+        else
+          [so.observed_at,so.value]
+        end
+      }
 
       @values_for_chart[s.id] = moving_average_of_values( values )
     end
 
+  end
+
+  def record_observation
+    @sensor = Sensor.find( params[:id] )
+
+    @sensor.sensor_observations.create( { value: params[:value], observed_at: Time.now } )
+    @sensor.update_attributes( { latest_value: params[:value], latest_value_observed_at: Time.now } )
+
+    redirect_to @sensor
   end
 
   def take_sensor_observations
@@ -34,7 +51,21 @@ class SensorsController < ApplicationController
     }
 
     respond_to do |format|
-      format.html
+      format.html {
+        @values_for_chart = {}
+
+        values = @sensor.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', 24.hours.ago ] ).collect{ |so|
+
+          if @sensor.ds1820?
+            [so.observed_at, c_to_f( so.value )]
+          else
+            [so.observed_at,so.value]
+          end
+        }
+
+        @values_for_chart[@sensor.id] = moving_average_of_values( values )
+
+      }
       format.json {
         render :json => sensor_for_json
       }
