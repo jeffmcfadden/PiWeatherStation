@@ -48,15 +48,41 @@ class Sensor < ActiveRecord::Base
       bod = day.beginning_of_day
       eod = day.end_of_day
 
-      max = sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).maximum( :value )
-      max = 0 if max.nil?
-
-      min = sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).minimum( :value )
-      min = 0 if min.nil?
+      max = max_value( bod, eod )
+      min = min_value( bod, eod )
 
       data.push( { day: day, max: max, min: min } )
     end
 
     data.reverse
   end
+
+  def max_value( bod, eod )
+    if eod < Time.now.beginning_of_day # Don't pull from cache for data that's on today.
+      Rails.cache.fetch("#{bod.to_i}-#{eod.to_i}-max", expires_in: 12.months) do
+        max = sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).maximum( :value )
+      end
+    else
+      max = sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).maximum( :value )
+    end
+
+    max = 0 if max.nil?
+
+    max
+  end
+
+  def min_value( bod, eod )
+    if eod < Time.now.beginning_of_day # Don't pull from cache for data that's on today.
+      Rails.cache.fetch("#{bod.to_i}-#{eod.to_i}-min", expires_in: 12.months) do
+        min = sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).minimum( :value )
+      end
+    else
+      min = sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).minimum( :value )
+    end
+
+    min = 0 if min.nil?
+
+    min
+  end
+
 end

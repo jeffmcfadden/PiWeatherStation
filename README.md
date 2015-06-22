@@ -28,13 +28,28 @@
     mkdir installs
     cd installs
     sudo apt-get install git
-    git clone https://github.com/ruby/ruby.git
+    git clone https://github.com/ruby/ruby.git  #This takes forever
     cd ruby
-    git checkout tags/v2_1_3
+    git checkout tags/v2_2_2
     sudo apt-get install autoconf
     autoconf
     sudo apt-get install gcc g++ make ruby1.9.1 bison libyaml-dev libssl-dev libffi-dev zlib1g-dev libxslt-dev libxml2-dev libpq-dev zip nodejs vim libreadline-dev
-    ./configure && make clean && make && sudo make install
+
+     # RPi B+ ONLY:
+    ./configure --disable-install-doc && make clean && make && sudo make install
+
+    # RPi 2 ONLY:
+    ./configure --disable-install-doc && make clean && make -j4 && sudo make install
+
+
+    # Wiring Pi:
+    cd ~/installs
+    git clone git://git.drogon.net/wiringPi
+    cd wiringPi
+    ./build
+    # Run this to be sure things are working:
+    # gpio -v
+    # gpio readall
 
     sudo apt-get install postgresql postgresql-contrib libpq-dev
 
@@ -53,9 +68,10 @@
     cd /www
     sudo git clone https://github.com/jeffmcfadden/PiWeatherStation.git
     mv PiWeatherStation weather_station
-    cd thermostat
+    cd weather_station
     echo "install: --no-rdoc --no-ri" >> ~/.gemrc
     echo "update:  --no-rdoc --no-ri" >> ~/.gemrc
+    echo "gem: --no-rdoc --no-ri" >> ~/.gemrc
     sudo gem install bundler
     bundle install
     RAILS_ENV=production bundle exec rake db:create
@@ -68,8 +84,8 @@
     # Reboot
 
     # install the weather_station.conf for nginx
-    # install the unicorn.conf for upstart
-    # install the crontab
+    # install the unicorn.conf for upstart to /etc/init/unicorn.conf
+    # install the crontab via crontab -e
 
     sudo nginx
 
@@ -80,4 +96,5 @@
 
     RAILS_ENV=production bundle exec rake assets:precompile
 
+    mkdir pids
     bundle exec unicorn_rails -c config/unicorn.rb -E production -D
