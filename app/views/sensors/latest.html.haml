@@ -1,0 +1,9 @@
+%pre
+  Sensor               | Latest Value
+  = "---------------------|-------------"
+  \
+  - @sensors.each do |sensor|
+    - lv = sensor.latest_value
+    - lv = (lv * 1.8000 + 32.00 ).round(2) if sensor.ds1820? || sensor.dp?
+    = "#{sensor.name.ljust(20, ' ' )} | #{sprintf( "%0.2f", lv ).rjust(10)}"
+    \

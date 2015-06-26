@@ -5,6 +5,10 @@ class SensorsController < ApplicationController
   def c_to_f( c )
     (c * 1.8000 + 32.00 ).round(2)
   end
+  
+  def latest
+    @sensors = Sensor.all.order( :id )
+  end
 
   def index
     @values_for_chart = {}

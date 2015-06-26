@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   get '/take_sensor_observations' => 'sensors#take_sensor_observations', as: :take_sensor_observations
 
   resources :sensors do
+    collection do
+      get 'latest'
+    end
+
     member do
       post 'record_observation'
     end
