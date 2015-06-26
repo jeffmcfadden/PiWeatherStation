@@ -15,6 +15,7 @@ def averaged_reading( raw_value )
 end
 
 adc_num = 0
+n = 0
 
 loop do
   value = 0
@@ -37,27 +38,30 @@ loop do
 
   puts "value: #{value}, mvolts = #{mvolts}, v = #{v}, rh = #{rh}, true_rh = #{true_rh}, avg = #{avg_rh}"
 
-  #RH
-  puts "Saving RH"
-  uri = URI.parse( "http://192.168.201.182/sensors/3/record_observation" )
-  response = Net::HTTP.post_form(uri, {"value" => "#{true_rh}"})
+  if n % 6 == 0
+    #RH
+    puts "Saving RH"
+    uri = URI.parse( "http://192.168.201.182/sensors/3/record_observation" )
+    response = Net::HTTP.post_form(uri, {"value" => "#{true_rh}"})
 
-  #Get Temp
-  puts "Getting Temp"
-  uri = URI.parse( "http://192.168.201.182/sensors/1.json" )
-  response = Net::HTTP.get(uri)
-  data = JSON.parse( response )
-  temp = data["sensor"]["latest_value"]
-  puts "Temp: #{temp}"
+    #Get Temp
+    puts "Getting Temp"
+    uri = URI.parse( "http://192.168.201.182/sensors/1.json" )
+    response = Net::HTTP.get(uri)
+    data = JSON.parse( response )
+    temp = data["sensor"]["latest_value"]
+    puts "Temp: #{temp}"
 
-  dp = ( avg_rh / 100.0 ) ** (1.0/8.0) * (112 + (0.9 * temp) ) + (0.1 * temp) - 112
+    dp = ( avg_rh / 100.0 ) ** (1.0/8.0) * (112 + (0.9 * temp) ) + (0.1 * temp) - 112
 
-  puts "DP: #{dp}"
+    puts "DP: #{dp}"
 
-  #DP
-  puts "Saving DP"
-  uri = URI.parse( "http://192.168.201.182/sensors/4/record_observation" )
-  response = Net::HTTP.post_form(uri, {"value" => "#{dp}"})
+    #DP
+    puts "Saving DP"
+    uri = URI.parse( "http://192.168.201.182/sensors/4/record_observation" )
+    response = Net::HTTP.post_form(uri, {"value" => "#{dp}"})
+  end
 
+  n += 1
   sleep 10
 end

@@ -13,7 +13,7 @@ class SensorsController < ApplicationController
     @sensors.each do |s|
       values = s.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', 24.hours.ago ] ).collect{ |so|
 
-        if s.ds1820?
+        if s.ds1820? || s.dp?
           [so.observed_at, c_to_f( so.value )]
         else
           [so.observed_at,so.value]
