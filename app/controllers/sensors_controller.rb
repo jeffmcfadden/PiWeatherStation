@@ -8,7 +8,7 @@ class SensorsController < ApplicationController
 
   def index
     @values_for_chart = {}
-    @sensors = Sensor.all
+    @sensors = Sensor.all.order( :id )
 
     @sensors.each do |s|
       values = s.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', 24.hours.ago ] ).collect{ |so|
