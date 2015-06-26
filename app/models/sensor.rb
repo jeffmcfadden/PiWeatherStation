@@ -2,7 +2,7 @@ class Sensor < ActiveRecord::Base
   has_many :sensor_observations
   has_many :sensor_alarms
 
-  enum sensor_type: [ :ds1820, :kw ]
+  enum sensor_type: [ :ds1820, :kw, :rh, :dp ]
 
   serialize :sensor_settings, JSON
 
