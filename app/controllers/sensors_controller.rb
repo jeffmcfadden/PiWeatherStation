@@ -95,7 +95,7 @@ class SensorsController < ApplicationController
 
     respond_to do |format|
       format.json {
-        render :json => values
+        render :json => values.collect{ |v| { observed_at: v.observed_at, value: v.value, seconds: (v.observed_at.to_i - Time.now.to_i) }
       }
     end
   end
