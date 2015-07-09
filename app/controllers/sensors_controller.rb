@@ -87,8 +87,10 @@ class SensorsController < ApplicationController
 
     values = @sensor.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', start ] )
 
-    format.json {
-      render :json => values
+    respond_to do |format|
+      format.json {
+        render :json => values
+      }
     }
   end
 
