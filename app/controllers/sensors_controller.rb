@@ -76,22 +76,26 @@ class SensorsController < ApplicationController
     end
   end
 
-  def historical_values
+  def historical_values_after
+
+  end
+
+  def historical_values_before
     @sensor = Sensor.find( params[:id] )
 
     if params[:s_ago].present? && params[:s_ago].to_i < 86401
       start = params[:s_ago].to_i.seconds.ago
     else
-      start = 24.hours.ago
+      start = 0.hours.ago
     end
 
     if params[:limit].present? && params[:limit].to_i > 0 && params[:limit].to_i < 1441
       limit = params[:limit]
     else
-      limit = 600
+      limit = 100
     end
 
-    values = @sensor.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', start ] ).order( "observed_at DESC" ).limit( limit )
+    values = @sensor.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at <= ? AND sensor_observations.observed_at >= ', start, 4.days.ago ] ).order( "observed_at DESC" ).limit( limit )
 
     values = values.collect{ |v| { observed_at: v.observed_at, value: v.value, seconds: (v.observed_at.to_i - Time.now.to_i) } }
 
