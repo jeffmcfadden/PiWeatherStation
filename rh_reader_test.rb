@@ -1,3 +1,5 @@
+# sudo irb because pi_piper requires root
+
 require 'pi_piper'
 require 'net/http'
 require 'json'

@@ -5,7 +5,7 @@ class SensorsController < ApplicationController
   def c_to_f( c )
     (c * 1.8000 + 32.00 ).round(2)
   end
-  
+
   def latest
     @sensors = Sensor.all.order( :id )
   end
@@ -74,6 +74,22 @@ class SensorsController < ApplicationController
         render :json => sensor_for_json
       }
     end
+  end
+
+  def historical_values
+    @sensor = Sensor.find( params[:id] )
+
+    if params[:s_ago].present?
+      start = params[:s_ago].to_i.seconds.ago
+    else
+      start = 24.hours.ago
+    end
+
+    values = @sensor.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', start ] )
+
+    format.json {
+      render :json => values
+    }
   end
 
   private

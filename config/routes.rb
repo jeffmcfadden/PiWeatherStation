@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
     member do
       post 'record_observation'
+      get 'historical_values'
     end
   end
 
