@@ -79,7 +79,7 @@ class SensorsController < ApplicationController
   def historical_values
     @sensor = Sensor.find( params[:id] )
 
-    if params[:s_ago].present?
+    if params[:s_ago].present? && params[:s_ago].to_i < 86401
       start = params[:s_ago].to_i.seconds.ago
     else
       start = 24.hours.ago
