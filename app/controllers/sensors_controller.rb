@@ -85,7 +85,13 @@ class SensorsController < ApplicationController
       start = 24.hours.ago
     end
 
-    values = @sensor.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', start ] )
+    if params[:limit].present?
+      limit = params[:limit]
+    else
+      limit = 600
+    end
+
+    values = @sensor.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', start ] ).order( "observed_at DESC" ).limit( limit )
 
     respond_to do |format|
       format.json {
