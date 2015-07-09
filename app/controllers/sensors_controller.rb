@@ -85,7 +85,7 @@ class SensorsController < ApplicationController
       start = 24.hours.ago
     end
 
-    if params[:limit].present?
+    if params[:limit].present? && params[:limit] > 0 && params[:limit] < 1441
       limit = params[:limit]
     else
       limit = 600
