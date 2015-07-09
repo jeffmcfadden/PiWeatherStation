@@ -91,7 +91,7 @@ class SensorsController < ApplicationController
       format.json {
         render :json => values
       }
-    }
+    end
   end
 
   private
