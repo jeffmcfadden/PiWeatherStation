@@ -93,9 +93,11 @@ class SensorsController < ApplicationController
 
     values = @sensor.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at >= ?', start ] ).order( "observed_at DESC" ).limit( limit )
 
+    values = values.collect{ |v| { observed_at: v.observed_at, value: v.value, seconds: (v.observed_at.to_i - Time.now.to_i) } }
+
     respond_to do |format|
       format.json {
-        render :json => values.collect{ |v| { observed_at: v.observed_at, value: v.value, seconds: (v.observed_at.to_i - Time.now.to_i) }
+        render :json => values
       }
     end
   end
