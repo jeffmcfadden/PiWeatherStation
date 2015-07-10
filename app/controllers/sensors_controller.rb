@@ -92,19 +92,16 @@ class SensorsController < ApplicationController
     if params[:limit].present? && params[:limit].to_i > 0 && params[:limit].to_i < 1441
       limit = params[:limit]
     else
-      limit = 500
+      limit = 100
     end
 
-    values = @sensor.sensor_observations.select( 'sensor_observations.observed_at, sensor_observations.value' ).where( [ 'sensor_observations.observed_at <= ? AND sensor_observations.observed_at >= ?', start, 4.days.ago ] ).order( "observed_at DESC" ).limit( limit )
+    values = @sensor.sensor_observations.select( "sensor_observations.observed_at, sensor_observations.value" ).where( [ "sensor_observations.observed_at <= ? AND sensor_observations.observed_at >= ? AND date_part('minute', observed_at)::int % 10 = 0", start, 4.days.ago ] ).order( "observed_at DESC" ).limit( limit )
 
     values = values.collect{ |v| { observed_at: v.observed_at, value: v.value, seconds: (v.observed_at.to_i - Time.now.to_i) } }
 
-    n = 5
-    values_subset = (n - 1).step(values.size - 1, n).map { |i| values[i] }
-
     respond_to do |format|
       format.json {
-        render :json => values_subset
+        render :json => values
       }
     end
   end
