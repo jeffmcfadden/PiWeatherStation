@@ -59,7 +59,7 @@ class Sensor < ActiveRecord::Base
 
   def max_value( bod, eod )
     if eod < Time.now.beginning_of_day # Don't pull from cache for data that's on today.
-      max = Rails.cache.fetch("v1-#{self.id}-#{bod.to_i}-#{eod.to_i}-max", expires_in: 12.months) do
+      max = Rails.cache.fetch("v2-#{self.id}-#{bod.to_i}-#{eod.to_i}-max", expires_in: 12.months) do
         sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).maximum( :value )
       end
     else
@@ -73,7 +73,7 @@ class Sensor < ActiveRecord::Base
 
   def min_value( bod, eod )
     if eod < Time.now.beginning_of_day # Don't pull from cache for data that's on today.
-      min = Rails.cache.fetch("v1-#{self.id}-#{bod.to_i}-#{eod.to_i}-min", expires_in: 12.months) do
+      min = Rails.cache.fetch("v2-#{self.id}-#{bod.to_i}-#{eod.to_i}-min", expires_in: 12.months) do
          sensor_observations.where( "observed_at BETWEEN ? AND ?", bod, eod ).minimum( :value )
       end
     else
