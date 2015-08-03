@@ -31,11 +31,21 @@ class Sensor < ActiveRecord::Base
     else
       output = "bf 00 55 00 7f ff 0c 10 61 : crc=61 YES\nbf 00 55 00 7f ff 0c 10 61 t=11937"
     end
-    cRaw = output.split( "\n" )[1].split( "t=" )[1].to_i
-    temp_c = cRaw / 1000.0
+    cRaw = output.split( "\n" )[1].split( "t=" )[1]
 
-    self.sensor_observations.create( { value: temp_c, observed_at: Time.now } )
-    self.update_attributes( { latest_value: temp_c, latest_value_observed_at: Time.now } )
+    if cRaw.nil?
+      return nil
+    else
+      temp_c = cRaw.to_i / 1000.0
+    end
+
+    # Sanity Check
+    if temp_c > 54.4 || temp_c < -10
+      temp_c = nil
+    else
+      self.sensor_observations.create( { value: temp_c, observed_at: Time.now } )
+      self.update_attributes( { latest_value: temp_c, latest_value_observed_at: Time.now } )
+    end
 
     temp_c
   end
