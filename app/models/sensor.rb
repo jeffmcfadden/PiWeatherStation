@@ -33,7 +33,7 @@ class Sensor < ActiveRecord::Base
     end
     cRaw = output.split( "\n" )[1].split( "t=" )[1]
 
-    if cRaw.nil?
+    if cRaw.nil? || output.index( "YES" ).nil?
       return nil
     else
       temp_c = cRaw.to_i / 1000.0
